@@ -1,6 +1,8 @@
 package com.iabdinur.user;
 
+import java.util.List;
+
 public interface UserDAO {
-    User[] getUsers();
+    List<User> getUsers();
 }
 

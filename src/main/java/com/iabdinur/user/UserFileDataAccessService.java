@@ -2,27 +2,27 @@ package com.iabdinur.user;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 import java.util.UUID;
 
 public class UserFileDataAccessService implements UserDAO {
     @Override
-    public User[] getUsers() {
+    public List<User> getUsers() {
 
         // Provide the file path where the data.csv file is located
-        File file = new File("src/users.csv");
+        File file = new File("src/com/iabdinur/users.csv");
 
         // List to store the Person objects
-        User[] users = new User[4];
+        List<User> users = new ArrayList<>();
 
         try {
-            int index = 0;
             // Create a new scanner class  to read the file
             Scanner scan = new Scanner(file);
             while (scan.hasNext()) {
                 String[] fields = scan.nextLine().split(",");
-                users[index] = new User(UUID.fromString(fields[0]), fields[1]);
-                index++;
+                users.add(new User(UUID.fromString(fields[0]), fields[1]));
             }
             return users;
         } catch (
