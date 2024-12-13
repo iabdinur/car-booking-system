@@ -8,8 +8,7 @@ public class CarService {
     private final CarDAO carDAO;
 
     public CarService(CarDAO carDAO) {
-
-        this.carDAO = new CarDAO();
+        this.carDAO = carDAO;
     }
 
     public List<Car> getAllCars() {

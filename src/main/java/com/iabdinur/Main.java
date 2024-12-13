@@ -5,6 +5,7 @@ import com.iabdinur.booking.BookingDAO;
 import com.iabdinur.booking.BookingService;
 import com.iabdinur.car.Car;
 import com.iabdinur.car.CarDAO;
+import com.iabdinur.car.CarListDataAccessService;
 import com.iabdinur.car.CarService;
 import com.iabdinur.user.User;
 import com.iabdinur.user.UserDAO;
@@ -23,7 +24,7 @@ public class Main {
         UserService userService = new UserService(userDAO);
 
         BookingDAO bookingDAO = new BookingDAO();
-       CarDAO carDAO = new CarDAO();
+       CarDAO carDAO = new CarListDataAccessService();
 
        CarService carService= new CarService(carDAO);
         BookingService bookingService = new BookingService(bookingDAO, carService);
