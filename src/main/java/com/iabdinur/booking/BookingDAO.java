@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.UUID;
 
 public class BookingDAO {
-    private static final List<Booking> bookings;
+    private final static List<Booking> bookings;
 
     static {
         bookings = new ArrayList<Booking>();
@@ -18,6 +18,8 @@ public class BookingDAO {
     public static void book(Booking booking) {
         bookings.add(booking);
     }
-    public void cancelBooking(UUID id) {
+
+    public void cancelCarBooking(UUID id) {
     }
+
 }
