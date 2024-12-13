@@ -2,7 +2,6 @@ package com.iabdinur.car;
 
 import java.math.BigDecimal;
 import java.util.Objects;
-import java.util.UUID;
 
 public class Car {
     private String regNumber;

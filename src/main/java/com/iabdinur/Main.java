@@ -6,8 +6,12 @@ import com.iabdinur.booking.BookingService;
 import com.iabdinur.car.Car;
 import com.iabdinur.car.CarDAO;
 import com.iabdinur.car.CarService;
-import com.iabdinur.user.*;
+import com.iabdinur.user.User;
+import com.iabdinur.user.UserDAO;
+import com.iabdinur.user.UserFileDataAccessService;
+import com.iabdinur.user.UserService;
 
+import java.util.List;
 import java.util.Scanner;
 import java.util.UUID;
 
@@ -63,7 +67,7 @@ public class Main {
             } else {
                 UUID bookingId = bookingService.bookCar(user, regNumber);
                 String confirmationMessage = """
-                       🎉 Successfully booked car with reg number %s for user %s
+                        🎉 Successfully booked car with reg number %s for user %s
                         Booking ref: %s
                         """.formatted(regNumber, user, bookingId);
                 System.out.println(confirmationMessage);
@@ -84,8 +88,8 @@ public class Main {
             return;
         }
 
-        Car[] userBookedCars = BookingService.getUserBookedCars(user.getId());
-        if (userBookedCars.length == 0) {
+        List<Car> userBookedCars = BookingService.getUserBookedCars(user.getId());
+        if (userBookedCars.isEmpty()) {
             System.out.printf("❌ user %s has no cars booked", user);
             return;
         }
@@ -95,8 +99,8 @@ public class Main {
     }
 
     private static void viewAllBookings (BookingService bookingService){
-        Booking[] bookings = bookingService.getBookings();
-        if (bookings.length == 0) {
+        List<Booking> bookings = bookingService.getAllBookings();
+        if (bookings.isEmpty()) {
             System.out.println("No bookings available 😕");
             return;
         }
@@ -106,8 +110,8 @@ public class Main {
     }
 
     private static void viewAvailableCars(BookingService bookingService, boolean isElectric) {
-        Car[] availableCars = isElectric ? bookingService.getAvailableElectricCars() : bookingService.getAvailableCars();
-        if (availableCars.length == 0) {
+        List<Car> availableCars = isElectric ? bookingService.getAvailableElectricCars() : bookingService.getAvailableCars();
+        if (availableCars.isEmpty()) {
             System.out.println("❌ No cars available for renting");
             return;
         }
@@ -118,8 +122,8 @@ public class Main {
 
 
     private static void viewAllUsers(UserService userService) {
-        User[] users = userService.getUsers();
-        if (users.length == 0) {
+        List<User> users = userService.getUsers();
+        if (users.isEmpty()) {
             System.out.println("❌ No users in the system");
             return;
         }
