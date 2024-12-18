@@ -11,15 +11,15 @@ import com.iabdinur.user.User;
 import com.iabdinur.user.UserDAO;
 import com.iabdinur.user.UserFileDataAccessService;
 import com.iabdinur.user.UserService;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import java.util.List;
 import java.util.Scanner;
 import java.util.UUID;
 
-
+@SpringBootApplication
 public class Main {
     public static void main(String[] args) {
-
 
         UserDAO userDAO = new UserFileDataAccessService();
         UserService userService = new UserService(userDAO);
@@ -143,5 +143,6 @@ public class Main {
         System.out.println("6️⃣ - View all users");
         System.out.println("7️⃣ - Exit");
     }
+
 
 }
