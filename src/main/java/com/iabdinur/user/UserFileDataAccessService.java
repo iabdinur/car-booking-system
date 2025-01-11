@@ -1,5 +1,7 @@
 package com.iabdinur.user;
 
+import org.springframework.stereotype.Repository;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -7,6 +9,7 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.UUID;
 
+@Repository
 public class UserFileDataAccessService implements UserDAO {
 
     @Override
