@@ -15,7 +15,7 @@ public class CarListDataAccessService implements CarDAO {
                 new BigDecimal("50000"),
                 true));
         cars.add(new Car("5678",
-                CarBrand.BML,
+                CarBrand.BMW,
                 new BigDecimal("30000"),
                 false));
         cars.add(new Car("8765",

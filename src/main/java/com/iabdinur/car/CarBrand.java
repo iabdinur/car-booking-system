@@ -2,7 +2,10 @@ package com.iabdinur.car;
 
 public enum CarBrand {
     TESLA,
-    BML,
+    BMW,
     VW,
-    TOYOTA
+    TOYOTA,
+    MERCEDES,
+    FORD,
+    HONDA
 }
