@@ -3,12 +3,15 @@ package com.iabdinur.booking;
 import com.iabdinur.car.Car;
 import com.iabdinur.car.CarService;
 import com.iabdinur.user.User;
+import org.springframework.stereotype.Service;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
+@Service
 public class BookingService {
     private final CarService carService;
     private final BookingDAO bookingDAO;
@@ -24,7 +27,7 @@ public class BookingService {
             throw new IllegalStateException("No car available for renting");
         }
         for (Car availableCar : availableCars) {
-            // let's make sure the car user wants still available
+            // let's make sure the car user wants is still available
             if (availableCar.getRegNumber().equals(regNumber)) {
                 Car car = carService.getCar(regNumber);
                 UUID bookingId = UUID.randomUUID();
@@ -36,8 +39,8 @@ public class BookingService {
         throw new IllegalStateException("Already booked. car with regNumber " + regNumber);
     }
 
-    public static List<Car> getUserBookedCars(UUID userId) {
-        List<Booking> bookings = BookingDAO.getBookings();
+    public List<Car> getUserBookedCars(UUID userId) {
+        List<Booking> bookings = bookingDAO.getBookings();
         List<Car> userCars = new ArrayList<>();
 
 
@@ -64,7 +67,7 @@ public class BookingService {
             return Collections.emptyList();
         }
 
-        List<Booking> bookings = BookingDAO.getBookings();
+        List<Booking> bookings = bookingDAO.getBookings();
 
         // no bookings yet therefore all cars are available
         if (bookings.isEmpty()) {
@@ -91,7 +94,7 @@ public class BookingService {
     }
 
     public List<Booking> getAllBookings() {
-        return BookingDAO.getBookings();
+        return bookingDAO.getBookings();
     }
 }
 

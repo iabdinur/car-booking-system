@@ -2,6 +2,7 @@ package com.iabdinur;
 
 import com.iabdinur.booking.Booking;
 import com.iabdinur.booking.BookingDAO;
+import com.iabdinur.booking.BookingListDataAccessService;
 import com.iabdinur.booking.BookingService;
 import com.iabdinur.car.Car;
 import com.iabdinur.car.CarDAO;
@@ -19,7 +20,7 @@ public class ConsoleApp {
         UserDAO userDAO = new UserFileDataAccessService();
         UserService userService = new UserService(userDAO);
 
-        BookingDAO bookingDAO = new BookingDAO();
+        BookingDAO bookingDAO = new BookingListDataAccessService();
         CarDAO carDAO = new CarFileDataAccessService();
 
         CarService carService= new CarService(carDAO);
@@ -84,7 +85,7 @@ public class ConsoleApp {
             return;
         }
 
-        List<Car> userBookedCars = BookingService.getUserBookedCars(user.getId());
+        List<Car> userBookedCars = bookingService.getUserBookedCars(user.getId());
         if (userBookedCars.isEmpty()) {
             System.out.printf("❌ user %s has no cars booked", user);
             return;
