@@ -1,6 +1,5 @@
 package com.iabdinur.user;
 
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -9,24 +8,20 @@ import java.util.UUID;
 @Service
 public class UserService {
 
-    private final UserDAO userDAO;
+    private final UserRepository userRepository;
 
-    public UserService(@Qualifier("userFileDataAccessService") UserDAO userDAO) {
-        this.userDAO = userDAO;
+    public UserService(UserRepository userRepository) {
+        this.userRepository = userRepository;
     }
 
     public List<User> getUsers() {
-        return userDAO.getUsers();
+        return userRepository.findAll();
     }
 
 
     public User getUserById(UUID id) {
-        for (User user : getUsers()) {
-            if (user.getId().equals(id)) {
-                return user;
-            }
-        }
-        return null;
+        return userRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("User not found with id: " + id));
     }
 
 

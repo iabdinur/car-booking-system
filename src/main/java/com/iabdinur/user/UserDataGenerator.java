@@ -1,32 +1,40 @@
 package com.iabdinur.user;
 
 import com.github.javafaker.Faker;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.stereotype.Component;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.nio.file.Paths;
-import java.util.UUID;
+import java.time.LocalDateTime;
+import java.util.concurrent.TimeUnit;
 
-public class UserDataGenerator {
-    public static void main(String[] args) {
+@Component
+public class UserDataGenerator implements CommandLineRunner {
+
+    private final UserRepository userRepository;
+
+    public UserDataGenerator(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
+
+    @Override
+    public void run(String... args) throws Exception {
         Faker faker = new Faker();
-        String csvPath = Paths.get("src/main/resources/users.csv").toString();  // Path to save users.csv
 
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(csvPath))) {
-            // Generate 25 fake users
-            for (int i = 0; i < 25; i++) {
-                String uuid = UUID.randomUUID().toString();
-                String name = faker.name().firstName();
+        // Generate 25 fake users
+        for (int i = 0; i < 25; i++) {
+            String firstName = faker.name().firstName();
+            String lastName = faker.name().lastName();
+            String name = faker.name().firstName();
+            String email = String.format("%s.%s@gmail.com", firstName, lastName);
+            LocalDateTime localDateTime = faker.date().past(365, TimeUnit.DAYS).toInstant().atZone(java.time.ZoneId.systemDefault()).toLocalDateTime();
+            User user = new User(name, email, localDateTime);
 
-
-                // Write user data to CSV
-                writer.write(String.format("%s,%s\n", uuid, name));
-            }
-
-            System.out.println("Successfully generated users.csv at: " + csvPath);
-        } catch (IOException e) {
-            System.out.println("Error writing to user.csv: " + e.getMessage());
+            // Save user to the database
+            userRepository.save(user);
         }
+
+        System.out.println("Successfully saved 25 users to the database.");
+
     }
 }

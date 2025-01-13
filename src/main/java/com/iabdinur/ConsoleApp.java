@@ -9,16 +9,15 @@ import com.iabdinur.car.CarDAO;
 import com.iabdinur.car.CarFileDataAccessService;
 import com.iabdinur.car.CarService;
 import com.iabdinur.user.User;
-import com.iabdinur.user.UserDAO;
-import com.iabdinur.user.UserFileDataAccessService;
+import com.iabdinur.user.UserRepository;
 import com.iabdinur.user.UserService;
 
 import java.util.List;
 import java.util.Scanner;
 import java.util.UUID;
+
 public class ConsoleApp {
-        UserDAO userDAO = new UserFileDataAccessService();
-        UserService userService = new UserService(userDAO);
+        UserService userService;
 
         BookingDAO bookingDAO = new BookingListDataAccessService();
         CarDAO carDAO = new CarFileDataAccessService();
