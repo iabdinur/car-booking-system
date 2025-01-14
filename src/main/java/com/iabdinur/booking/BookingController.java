@@ -2,6 +2,7 @@ package com.iabdinur.booking;
 
 import com.iabdinur.car.Car;
 import com.iabdinur.user.User;
+import com.iabdinur.user.UserService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -12,18 +13,23 @@ import java.util.UUID;
 public class BookingController {
 
     private final BookingService bookingService;
+    private final UserService userService;
 
-    public BookingController(BookingService bookingService) {
+    public BookingController(BookingService bookingService, UserService userService) {
         this.bookingService = bookingService;
+        this.userService = userService;
     }
 
     // Endpoint to book a car
     @PostMapping("/book")
     public UUID bookCar(
             @RequestParam UUID userId,
-            @RequestParam String userName,
             @RequestParam String regNumber) {
-        User user = new User(userId, userName);
+        // Retrieve the user by ID from the database
+        User user = userService.getUserById(userId);
+        if (user == null) {
+            throw new IllegalArgumentException("No user found with ID: " + userId);
+        }
         return bookingService.bookCar(user, regNumber);
     }
 
@@ -42,13 +48,12 @@ public class BookingController {
     // Endpoint to cancel a booking by booking ID
     @DeleteMapping("/{bookingId}")
     public String cancelBooking(@PathVariable UUID bookingId) {
-        List<Booking> bookings = bookingService.getAllBookings();
-        for (Booking booking : bookings) {
-            if (booking.getBookingId().equals(bookingId) && !booking.isCanceled()) {
-                booking.setCanceled(true);
-                return String.format("Booking with ID %s has been canceled successfully.", bookingId);
-            }
+        Booking booking = bookingService.getBookingById(bookingId);
+        if (booking == null || booking.isCanceled()) {
+            throw new IllegalStateException(String.format("No active booking found with ID %s.", bookingId));
         }
-        throw new IllegalStateException(String.format("No active booking found with ID %s.", bookingId));
+        booking.setCanceled(true);
+        bookingService.saveBooking(booking);  // Save the updated booking
+        return String.format("Booking with ID %s has been canceled successfully.", bookingId);
     }
 }

@@ -2,36 +2,72 @@ package com.iabdinur.booking;
 
 import com.iabdinur.car.Car;
 import com.iabdinur.user.User;
+import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.UUID;
 
+@Entity(name = "Booking")
+@Table(name = "bookings")
 public class Booking {
-    private UUID bookingId;
-    private User user;
-    private Car car;
-    private LocalDateTime bookingTime;
-    private boolean isCanceled;
 
-    public Booking(UUID bookingId, User user, Car car, LocalDateTime bookingTime, boolean isCanceled) {
-        this.bookingId = bookingId;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(
+            name = "id",
+            nullable = false,
+            updatable = false
+    )
+    UUID id;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(
+            name = "user_id",
+            nullable = false,
+            referencedColumnName = "id",
+            foreignKey = @ForeignKey(name = "fk_booking_user")
+    )
+    User user;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(
+            name = "car_id",
+            nullable = false,
+            referencedColumnName = "reg_number",
+            foreignKey = @ForeignKey(name = "fk_booking_car")
+    )
+    Car car;
+
+    @Column(
+            name = "booking_time",
+            nullable = false,
+            columnDefinition = "TIMESTAMP WITHOUT TIME ZONE"
+    )
+    LocalDateTime bookingTime;
+
+    @Column(
+            name = "is_canceled",
+            nullable = false
+    )
+    boolean isCanceled;
+
+    public Booking(User user, Car car, LocalDateTime bookingTime) {
         this.user = user;
         this.car = car;
         this.bookingTime = bookingTime;
-        this.isCanceled = isCanceled;
     }
 
-    public Booking(UUID bookingId, User user, Car car, LocalDateTime bookingTime) {
-        this(bookingId, user, car, bookingTime, false);
+    public Booking() {
+
     }
 
-    public UUID getBookingId() {
-        return bookingId;
+    public UUID getId() {
+        return id;
     }
 
-    public void setBookingId(UUID bookingId) {
-        this.bookingId = bookingId;
+    public void setId(UUID id) {
+        this.id = id;
     }
 
     public User getUser() {
@@ -68,21 +104,20 @@ public class Booking {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Booking booking = (Booking) o;
-        return isCanceled == booking.isCanceled && Objects.equals(bookingId, booking.bookingId) && Objects.equals(user, booking.user) && Objects.equals(car, booking.car) && Objects.equals(bookingTime, booking.bookingTime);
+        return Objects.equals(id, booking.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(bookingId, user, car, bookingTime, isCanceled);
+        return Objects.hash(id);
     }
 
     @Override
     public String toString() {
         return "Booking{" +
-                "bookingId=" + bookingId +
+                "id=" + id +
                 ", user=" + user +
                 ", car=" + car +
                 ", bookingTime=" + bookingTime +

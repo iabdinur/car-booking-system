@@ -1,0 +1,18 @@
+{
+  "properties": [
+    {
+      "name": "spring.logging.level.org.hibernate.SQL",
+      "type": "java.lang.String",
+      "description": "Description for spring.logging.level.org.hibernate.SQL."
+    },
+    {
+      "name": "spring.logging.level.org.hibernate.type.descriptor.sql",
+      "type": "java.lang.String",
+      "description": "Description for spring.logging.level.org.hibernate.type.descriptor.sql."
+    },
+    {
+      "name": "spring.logging.level.org.springframework.transaction",
+      "type": "java.lang.String",
+      "description": "Description for spring.logging.level.org.springframework.transaction."
+    }
+  ] }

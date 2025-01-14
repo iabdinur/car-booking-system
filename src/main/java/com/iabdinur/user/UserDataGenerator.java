@@ -1,7 +1,6 @@
 package com.iabdinur.user;
 
 import com.github.javafaker.Faker;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
@@ -33,8 +32,6 @@ public class UserDataGenerator implements CommandLineRunner {
             // Save user to the database
             userRepository.save(user);
         }
-
         System.out.println("Successfully saved 25 users to the database.");
-
     }
 }

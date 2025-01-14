@@ -2,47 +2,33 @@ package com.iabdinur.car;
 
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 @Service
 public class CarService {
-    private final CarDAO carDAO;
+    private final CarRepository carRepository;
 
-    public CarService(CarDAO carDAO) {
-        this.carDAO = carDAO;
+    public CarService(CarRepository carRepository) {
+        this.carRepository = carRepository;
     }
 
     public List<Car> getAllCars() {
-        return carDAO.getAllCars();
+        return carRepository.findAll();
     }
 
     public Car getCar(String regNumber) {
-        for (Car car : getAllCars()) {
-            if (regNumber.equals(car.getRegNumber())) {
-                return car;
-            }
-        }
-        throw new IllegalStateException(String.format("Car with reg %s not found", regNumber));
+        return carRepository.findById(regNumber)
+                .orElseThrow(() -> new IllegalStateException(String.format("Car with reg %s not found", regNumber)));
     }
 
     public List<Car> getAllElectricCars() {
         List<Car> cars = getAllCars();
-
         if (cars.isEmpty()) {
             return Collections.emptyList();
         }
-
-        List<Car> electricCars = new ArrayList<>();
-
-        for (Car car : cars) {
-            if (car.isElectric()) {
-                electricCars.add(car);
-            }
-        }
-
-
-        return electricCars;
+        return cars.stream()
+                .filter(Car::isElectric)
+                .toList();
     }
 }

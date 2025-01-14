@@ -1,59 +1,62 @@
 package com.iabdinur;
 
 import com.iabdinur.booking.Booking;
-import com.iabdinur.booking.BookingDAO;
-import com.iabdinur.booking.BookingListDataAccessService;
 import com.iabdinur.booking.BookingService;
 import com.iabdinur.car.Car;
-import com.iabdinur.car.CarDAO;
-import com.iabdinur.car.CarFileDataAccessService;
 import com.iabdinur.car.CarService;
 import com.iabdinur.user.User;
-import com.iabdinur.user.UserRepository;
 import com.iabdinur.user.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Scanner;
 import java.util.UUID;
 
+@Component
 public class ConsoleApp {
-        UserService userService;
 
-        BookingDAO bookingDAO = new BookingListDataAccessService();
-        CarDAO carDAO = new CarFileDataAccessService();
+    private final UserService userService;
+    private final CarService carService;
+    private final BookingService bookingService;
 
-        CarService carService= new CarService(carDAO);
-        BookingService bookingService = new BookingService(bookingDAO, carService);
+    private final Scanner scanner = new Scanner(System.in);
 
-        Scanner scanner = new Scanner(System.in);
-        public void run() {
-            boolean running = true;
-            while (running) {
-                viewMenu();
-                System.out.println("Hello and Welcome, What would you like to do?");
-                String input = scanner.nextLine();
+    @Autowired
+    public ConsoleApp(UserService userService, CarService carService, BookingService bookingService) {
+        this.userService = userService;
+        this.carService = carService;
+        this.bookingService = bookingService;
+    }
 
-                switch (input) {
-                    case "1" -> bookCar(userService, bookingService, scanner);
-                    case "2" -> viewAllUserBookedCars(userService, bookingService, scanner);
-                    case "3" -> viewAllBookings(bookingService);
-                    case "4" -> viewAvailableCars(bookingService, false);
-                    case "5" -> viewAvailableCars(bookingService, true);
-                    case "6" -> viewAllUsers(userService);
-                    case "7" -> {
-                        System.out.println("Goodbye!");
-                        running = false;
-                    }
-                    default -> System.out.println(input + " is not a valid option ❌");
+    public void run() {
+        boolean running = true;
+        while (running) {
+            viewMenu();
+            System.out.println("Hello and Welcome, What would you like to do?");
+            String input = scanner.nextLine();
+
+            switch (input) {
+                case "1" -> bookCar();
+                case "2" -> viewAllUserBookedCars();
+                case "3" -> viewAllBookings();
+                case "4" -> viewAvailableCars(false);
+                case "5" -> viewAvailableCars(true);
+                case "6" -> viewAllUsers();
+                case "7" -> {
+                    System.out.println("Goodbye!");
+                    running = false;
                 }
+                default -> System.out.println(input + " is not a valid option ❌");
             }
         }
+    }
 
-    private static void bookCar (UserService userService, BookingService bookingService, Scanner scanner){
-        viewAvailableCars(bookingService, false);
+    private void bookCar() {
+        viewAvailableCars(false);
         System.out.println("➡️ select car reg number");
         String regNumber = scanner.nextLine();
-        viewAllUsers(userService);
+        viewAllUsers();
         System.out.println("➡️ select user id");
         String userId = scanner.nextLine();
         try {
@@ -71,11 +74,10 @@ public class ConsoleApp {
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
-
     }
 
-    private static void viewAllUserBookedCars(UserService userService, BookingService bookingService, Scanner scanner) {
-        viewAllUsers(userService);
+    private void viewAllUserBookedCars() {
+        viewAllUsers();
         System.out.println("➡️ select user id");
         String userId = scanner.nextLine();
         User user = userService.getUserById(UUID.fromString(userId));
@@ -86,7 +88,7 @@ public class ConsoleApp {
 
         List<Car> userBookedCars = bookingService.getUserBookedCars(user.getId());
         if (userBookedCars.isEmpty()) {
-            System.out.printf("❌ user %s has no cars booked", user);
+            System.out.printf("❌ user %s has no cars booked%n", user);
             return;
         }
         for (Car userBookedCar : userBookedCars) {
@@ -94,7 +96,7 @@ public class ConsoleApp {
         }
     }
 
-    private static void viewAllBookings (BookingService bookingService){
+    private void viewAllBookings() {
         List<Booking> bookings = bookingService.getAllBookings();
         if (bookings.isEmpty()) {
             System.out.println("No bookings available 😕");
@@ -105,7 +107,7 @@ public class ConsoleApp {
         }
     }
 
-    private static void viewAvailableCars(BookingService bookingService, boolean isElectric) {
+    private void viewAvailableCars(boolean isElectric) {
         List<Car> availableCars = isElectric ? bookingService.getAvailableElectricCars() : bookingService.getAvailableCars();
         if (availableCars.isEmpty()) {
             System.out.println("❌ No cars available for renting");
@@ -116,8 +118,7 @@ public class ConsoleApp {
         }
     }
 
-
-    private static void viewAllUsers(UserService userService) {
+    private void viewAllUsers() {
         List<User> users = userService.getUsers();
         if (users.isEmpty()) {
             System.out.println("❌ No users in the system");
@@ -128,7 +129,7 @@ public class ConsoleApp {
         }
     }
 
-    private static void viewMenu() {
+    private void viewMenu() {
         System.out.println("1️⃣ - Book Car");
         System.out.println("2️⃣ - View All User Booked Cars");
         System.out.println("3️⃣ - View All Bookings");
@@ -138,4 +139,3 @@ public class ConsoleApp {
         System.out.println("7️⃣ - Exit");
     }
 }
-

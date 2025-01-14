@@ -1,12 +1,14 @@
 package com.iabdinur.user;
 
+import com.iabdinur.booking.Booking;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
-@Entity(name="User")
+@Entity(name = "User")
 @Table(
         name = "users",
         uniqueConstraints = {
@@ -22,6 +24,7 @@ public class User {
             updatable = false
     )
     UUID id;
+
     @Column(
             name = "name",
             nullable = false,
@@ -43,6 +46,13 @@ public class User {
     )
     LocalDateTime createdAt;
 
+    @OneToMany(
+            mappedBy = "user",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    List<Booking> bookings;
+
     public User() {
     }
 
@@ -54,6 +64,7 @@ public class User {
     public User(String name, String email) {
         this.name = name;
         this.email = email;
+        this.createdAt = LocalDateTime.now();
     }
 
     public User(String name, String email, LocalDateTime createdAt) {
@@ -92,6 +103,14 @@ public class User {
 
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public List<Booking> getBookings() {
+        return bookings;
+    }
+
+    public void setBookings(List<Booking> bookings) {
+        this.bookings = bookings;
     }
 
     @Override
